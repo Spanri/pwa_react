@@ -6,7 +6,7 @@ const App = () => {
 	const [hasNotification, setHasNotification] = useState(false)
 
 	// function to actually ask the permissions
-	const handlePermission = permission => {
+	const handlePermission = () => {
 		// set the button to shown or hidden, depending on what the user answers
 		if (Notification.permission === "denied" || Notification.permission === "default") {
 			setHasNotification(false)
@@ -16,42 +16,38 @@ const App = () => {
 	}
 
 	useEffect(() => {
-		const checkNotificationPromise = () => {
-			try {
-				Notification.requestPermission().then()
-			} catch (e) {
-				return false
-			}
-
-			return true
-		}
-
-		const askNotificationPermission = () => {
-			// Let's check if the browser supports notifications
-			if (!("Notification" in window)) {
-				console.log("This browser does not support notifications.")
-			} else {
-				if (checkNotificationPromise()) {
-					Notification.requestPermission().then(permission => {
-						handlePermission(permission)
-					})
-				} else {
-					Notification.requestPermission(function (permission) {
-						handlePermission(permission)
-					})
-				}
-			}
-		}
-
-		askNotificationPermission()
+		handlePermission()
 	}, [])
+
+	const checkNotificationPromise = () => {
+		try {
+			Notification.requestPermission().then()
+		} catch (e) {
+			return false
+		}
+
+		return true
+	}
+
+	const askNotificationPermission = thenFunc => {
+		// Let's check if the browser supports notifications
+		if (!("Notification" in window)) {
+			console.log("This browser does not support notifications.")
+		} else {
+			if (checkNotificationPromise()) {
+				Notification.requestPermission().then(thenFunc)
+			} else {
+				Notification.requestPermission(thenFunc)
+			}
+		}
+	}
 
 	const createNotification = title => {
 		const text = "Текст уведомления: " + title
 		new Notification("Заголовок", { body: text, badge: logo, icon: logo })
 	}
 
-	function notifyMe() {
+	const notifyMe = () => {
 		// Let's check if the browser supports notifications
 		if (!("Notification" in window)) {
 			alert("This browser does not support desktop notification")
@@ -60,26 +56,18 @@ const App = () => {
 		// Let's check whether notification permissions have already been granted
 		else if (Notification.permission === "granted") {
 			// If it's okay let's create a notification
-			createNotification("Hi there!")
+			createNotification("Ура, уведомления разрешены")
 		}
 
 		// Otherwise, we need to ask the user for permission
 		else if (Notification.permission !== "denied") {
-			console.log("denied")
-			Notification.requestPermission(permission => {
-				console.log("send request")
-				// If the user accepts, let's create a notification
+			askNotificationPermission(permission => {
+				handlePermission()
+
 				if (permission === "granted") {
-					createNotification("Hi there!")
+					createNotification("Ура, мы вас спросили и уведомления разрешены")
 				}
 			})
-			// Notification.requestPermission().then(function (permission) {
-			// 	console.log("send request")
-			// 	// If the user accepts, let's create a notification
-			// 	if (permission === "granted") {
-			// 		createNotification("Hi there!")
-			// 	}
-			// })
 		}
 
 		// At last, if the user has denied notifications, and you
