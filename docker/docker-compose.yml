@@ -9,6 +9,7 @@ services:
     volumes:
       - ../frontend:/app
       - ../frontend/node_modules:/app/node_modules
+      - /etc/ssl/certs:/etc/ssl/certs
     ports:
       - 3000:3000
       - 44363:44363

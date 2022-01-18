@@ -10,16 +10,16 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://cra.link/PWA
 
-const isLocalhost = Boolean(
-	window.location.hostname === "localhost" ||
-		// [::1] is the IPv6 localhost address.
-		window.location.hostname === "[::1]" ||
-		// 127.0.0.0/8 are considered localhost for IPv4.
-		window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
-)
+const isLocalhost = false
+//  Boolean(
+// 	window.location.hostname === "localhost" ||
+// 		// [::1] is the IPv6 localhost address.
+// 		window.location.hostname === "[::1]" ||
+// 		// 127.0.0.0/8 are considered localhost for IPv4.
+// 		window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+// )
 
 export function register(config) {
-	console.log(`"serviceWorker" in navigator`, "serviceWorker" in navigator, { navigator })
 	// process.env.NODE_ENV === "production" &&
 	if ("serviceWorker" in navigator) {
 		// The URL constructor is available in all browsers that support SW.
@@ -32,26 +32,18 @@ export function register(config) {
 		}
 
 		window.addEventListener("load", () => {
-			const swUrl = "./service-worker.js" // `${process.env.PUBLIC_URL}/service-worker.js`;  // `http://localhost:3000/service-worker.js` //
-			console.log({
-				swUrl,
-				process,
-				"process.env.PUBLIC_URL": process.env.PUBLIC_URL,
-				"process.env['PUBLIC_URL']": process.env["PUBLIC_URL"]
-			})
+			const swUrl = `${process.env.PUBLIC_URL}/service-worker.js` // `http://localhost:3000/service-worker.js` //
 
 			if (isLocalhost) {
 				// This is running on localhost. Let's check if a service worker still exists or not.
 				checkValidServiceWorker(swUrl, config)
 
-				console.log("loaded", { navigator, serviceWorker: navigator.serviceWorker })
-
 				// Add some additional logging to localhost, pointing developers to the
 				// service worker/PWA documentation.
-				navigator.serviceWorker.getRegistrations().then(registration => {
-					console.log({ registration })
-					// registration[0].showNotification(your-title, your-options);
-				})
+				// navigator.serviceWorker.getRegistrations().then(registration => {
+				// 	console.log({ registration })
+				// 	// registration[0].showNotification(your-title, your-options);
+				// })
 
 				navigator.serviceWorker.ready
 					.then(function () {
@@ -67,7 +59,6 @@ export function register(config) {
 		})
 	} else if ("serviceWorker" in navigator && process.env.NODE_ENV !== "production") {
 		const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`
-		console.log("aaa", { process, swUrl })
 
 		window.addEventListener("load", function () {
 			navigator.serviceWorker.register(swUrl).then(
@@ -85,7 +76,6 @@ export function register(config) {
 }
 
 function registerValidSW(swUrl, config) {
-	console.log({ swUrl })
 	navigator.serviceWorker
 		.register(swUrl)
 		.then(registration => {
@@ -95,7 +85,6 @@ function registerValidSW(swUrl, config) {
 					return
 				}
 				installingWorker.onstatechange = () => {
-					console.log({ "installingWorker.state": installingWorker.state })
 					if (installingWorker.state === "installed") {
 						if (navigator.serviceWorker.controller) {
 							// At this point, the updated precached content has been fetched,
